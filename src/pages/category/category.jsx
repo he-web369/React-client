@@ -127,9 +127,10 @@ export default class Category extends Component{
             showStatus:0
         })
         const {parentId}=this.category
+        const categoryId=this.category._id
         const categoryName=this.category.name
         //清除输入数据
-        const result=await reqRemoveCategory({parentId,categoryName})
+        const result=await reqRemoveCategory({parentId,categoryName,categoryId})
         if(result.status===0){
             if (parentId === this.state.parentId) {
                 this.getCategory()
@@ -209,7 +210,10 @@ export default class Category extends Component{
                     title='删除分类'
                     visible={showStatus===3}
                     onOk={this.removeCategory}
-                    onCancel={this.handleCancer}
+                    onCancel={()=>{
+                        this.setState({showStatus:0})
+                    }
+                    }
                     okText='确定'
                     cancelText='取消'
                 >

@@ -35,7 +35,8 @@ class AddForm extends Component{
                 {
                     getFieldDecorator('parentId',{
                         initialValue:parentId
-                    })(
+                    })
+                    (
                             <Select>
                                 <Option value='0'>一级分类</Option>
                                 {

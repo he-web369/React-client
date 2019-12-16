@@ -18,7 +18,8 @@ export default class ProductDetail extends Component{
         const {pCategoryId,categoryId}=this.props.location.state||{}
         if(pCategoryId==='0'){
           const result= await reqCategory(categoryId)
-          const cName=result.data.name
+          const data=result.data||{}
+          const cName=data.name
           this.setState({cName1:cName})
         }else{
             // const result1= await reqCategory(pCategoryId)
@@ -69,16 +70,14 @@ export default class ProductDetail extends Component{
                         <span className='left'>商品图片：</span>
                         <span>
                             {
-                                imgs.map(img=>(
+                                imgs.length!==0?imgs.map(img=>(
                                     <img
                                         key={img}
                                         className='product-img'
                                         src={BASE_IMG_URL+img}
                                         alt={img}/>
-                                ))
+                                )):'暂未设置图片'
                             }
-                            <img className='product-img' src={require('../../assets/images/404.png')} alt="图片1"/>
-                            <img className='product-img' src={require('../../assets/images/logo.png')} alt="图片2"/>
                         </span>
                     </Item>
                     <Item>
