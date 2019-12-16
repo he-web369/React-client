@@ -1,12 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import {render} from 'react-dom';
+import App from "./App";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import memoryUtils from "./utils/memoryUtils";
+import storageUtils from "./utils/storageUtils";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+//读取local中保存的user，保存到内存中
+const user =storageUtils.getUser()
+memoryUtils.user=user
+
+render(<App/>,document.getElementById('root'))
+
