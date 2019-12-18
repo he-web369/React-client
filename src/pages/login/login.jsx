@@ -1,11 +1,10 @@
 import React,{Component} from 'react'
 import {Input, Form, Icon, Button, message} from 'antd'
-import {reqLogin} from '../../api/index'
 import {Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 
 import './login.less'
-import memoryUtils from "../../utils/memoryUtils";
-import storageUtils from "../../utils/storageUtils";
+import {login} from '../../redux/actions'
 
 const Item=Form.Item
 class Login extends Component{
@@ -15,19 +14,7 @@ class Login extends Component{
         const {form}=this.props
         form.validateFields((err,values)=>{
             if(!err){
-                reqLogin(values).then( res =>{
-                    if(res.status===0){
-                        const user=res.data
-                        memoryUtils.user=user
-                        storageUtils.saveUser(user)
-                        message.success('登录成功')
-                       this.props.history.replace('/')
-                    }else{
-                        message.error(res.msg)
-                    }
-                },err =>{
-                    if(err)console.log(err)
-                })
+                this.props.login(values)
             }
         })
     }
@@ -44,9 +31,11 @@ class Login extends Component{
     }
     render(){
         //判断用户是否登录
-        if(memoryUtils.user._id){
+        if(this.props.user._id){
+            message.success('登录成功')
            return <Redirect to='/'/>
         }
+        const {msg}=this.props.user
         const form=this.props.form
         const {getFieldDecorator}=form
         return (
@@ -56,6 +45,7 @@ class Login extends Component{
                     <h1>React项目：后台管理项目</h1>
                 </header>
                 <section className='login-content'>
+                    <div className={msg?'login-content-msg showMsg':'login-content-msg'}>{msg}</div>
                     <h2>用户登录</h2>
                     <Form className='login-form' onSubmit={this.handleSubmit}>
                         <Item>
@@ -87,4 +77,6 @@ class Login extends Component{
         )
     }
 }
-export default Form.create()(Login)
+export default connect(
+    state=>({user:state.user}),{login}
+)(Form.create()(Login))

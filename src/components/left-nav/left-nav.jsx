@@ -4,20 +4,20 @@
 import React,{Component} from 'react'
 import {Link,withRouter} from 'react-router-dom'
 import {Menu,Icon} from 'antd'
+import {connect} from 'react-redux'
 
 import './index.less'
 import menuList from "../../config/menuConfig";
-import memoryUtils from "../../utils/memoryUtils";
+import {setHeadTitle} from '../../redux/actions'
 
 const SubMenu=Menu.SubMenu
 const Item=Menu.Item
 class LeftNav extends Component{
 
-
     hasAuth=(item)=>{
         const {key,isPublic}=item
-        const {menus}=memoryUtils.user.role
-        const {username}=memoryUtils.user
+        const {menus}=this.props.user.role
+        const {username}=this.props.user
         if(username==='admin'||isPublic||menus.indexOf(key)!==-1){
             return true
         }else if(item.children){
@@ -28,8 +28,8 @@ class LeftNav extends Component{
     getMenuNodes=(menuList)=>{
        return  menuList.map((item)=>{
            if(this.hasAuth(item)){
+               const path=this.props.location.pathname
                if(item.children){
-                   const path=this.props.location.pathname
                    const citem=item.children.find(citem=>path.indexOf(citem.key)===0)
                    if(citem) this.openKey=item.key
                    return (
@@ -40,8 +40,11 @@ class LeftNav extends Component{
                        </SubMenu>
                    )
                }else{
+                   if(item.key===path||path.indexOf(item.key)===0){
+                       this.props.setHeadTitle(item.title)
+                   }
                    return (<Item key={item.key}>
-                       <Link to={item.key}>
+                       <Link to={item.key} onClick={()=>this.props.setHeadTitle(item.title)}>
                            <Icon type={item.icon}/>
                            <span>{item.title}</span>
                        </Link>
@@ -83,4 +86,7 @@ class LeftNav extends Component{
         )
     }
 }
-export default withRouter(LeftNav)
+export default connect(
+    state=>({user:state.user}),
+    {setHeadTitle}
+)(withRouter(LeftNav))

@@ -9,6 +9,13 @@ const Item=Form.Item
         roles:PropTypes.array,
         user:PropTypes.object
     }
+     validatePs=(rule,value,callback)=>{
+         if(value.length<4||value.length>12){
+             callback('密码必须在4-12位之间')
+         }else{
+             callback()
+         }
+     }
 
      constructor(props) {
          super(props);
@@ -43,7 +50,8 @@ const Item=Form.Item
                               getFieldDecorator('password',{
                                   initialValue:user.password,
                                   rules:[
-                                      {required:true,message:'用户名称必须输入'}
+                                      {required:true,message:'密码必须输入'},
+                                      {validator:this.validatePs}
                                   ]
                               })(
                                   <Input type='password' placeholder='请输入密码'/>
