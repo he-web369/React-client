@@ -55,13 +55,7 @@ const menuList = [
         icon: 'pie-chart'
       },
     ]
-  },
-
-  {
-    title: '订单管理',
-    key: '/order',
-    icon: 'windows',
-  },
+  }
 ]
 
 export default menuList
